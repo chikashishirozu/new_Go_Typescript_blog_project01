@@ -1,0 +1,82 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: blogapp_postgres
+    environment:
+      POSTGRES_DB: blogapp
+      POSTGRES_USER: bloguser
+      POSTGRES_PASSWORD: blogpass
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bloguser -d blogapp"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s      
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: blogapp_backend
+    environment:
+      DATABASE_URL: "host=postgres user=bloguser password=blogpass dbname=blogapp port=5432 sslmode=disable"
+      JWT_SECRET: ${JWT_SECRET}
+      PORT: 8080
+      AUTO_MIGRATE: "true"
+      SEED_DATA: "true"
+      ALLOWED_ORIGINS: "http://localhost:3000,http://localhost:3001"
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app:z
+      - backend-tmp:/tmp
+    command: air -c .air.toml
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    container_name: blogapp_frontend
+    user: "${USER_ID:-1000}:${GROUP_ID:-1000}"
+#    user: "0:0"  # ← これが必要    
+    environment:
+      NEXT_PUBLIC_API_URL: http://backend:8080
+    ports:
+      - "3006:3000"
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend:/app:z
+      - frontend-node-modules:/app/node_modules
+      - frontend-next:/app/.next
+
+  admin:
+    build:
+      context: ./admin
+      dockerfile: Dockerfile.dev
+    container_name: blogapp_admin
+    user: "${USER_ID:-1000}:${GROUP_ID:-1000}"
+#    user: "0:0"  # ← これが必要    
+    environment:
+      VITE_API_URL: http://backend:8080
+    ports:
+      - "3007:3001"
+    depends_on:
+      - backend
+    volumes:
+      - ./admin:/app:z
+      - admin-node-modules:/app/node_modules
+
+volumes:
+  postgres_data:
+  backend-tmp:
+  frontend-node-modules:
+  frontend-next:
+  admin-node-modules:
