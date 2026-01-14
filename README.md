@@ -74,6 +74,21 @@ $ docker compose up
 $ docker compose logs -f
 $ rm -rf frontend/node_modules frontend/.next
 $ rm -rf admin/node_modules
+$ sudo chcon -Rt container_file_t $(pwd)/frontend/
+$ sudo chcon -Rt container_file_t $(pwd)/backend/
+$ sudo chown -R ${USER}:${USER} frontend/ backend/
+$ sudo chcon -Rt container_file_t "$(pwd)/frontend/"
+$ sudo chcon -Rt container_file_t "$(pwd)/backend/"
+$ sudo chcon -Rt container_file_t $(pwd)/
+$ sudo chown -R ${USER}:${USER} .
+$ sudo semanage boolean -l | grep docker
+$ sudo semanage fcontext -l | grep container_file_t
+$ chmod +x ./start.sh
+$ make migrate-up
+$ make migrate-down
+$ make migrate-create
+$ go run cmd/migrate/main.go seed
+
 ```
 
 
