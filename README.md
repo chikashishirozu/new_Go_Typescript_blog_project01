@@ -88,6 +88,9 @@ $ make migrate-up
 $ make migrate-down
 $ make migrate-create
 $ go run cmd/migrate/main.go seed
+$ docker compose exec backend sh
+/app # ls -la /app/tmp
+/app # go build -o ./tmp/main .
 
 ```
 
