@@ -26,7 +26,7 @@ mkdir -p backend frontend admin
 - `backend/*` → backend/
 
 
-# 使用コマンド週
+# 使用コマンド集
 
 ```
 $ git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.14.0
