@@ -336,6 +336,9 @@ curl -X POST http://localhost:8080/api/auth/register \
 ```bash
 docker exec -it blogapp_postgres psql -U bloguser -d blogapp -c \
   "UPDATE users SET is_admin = true WHERE email = 'admin@example.com';"
+
+$ docker exec -it blogapp_postgres psql -U bloguser -d blogapp
+
 ```
 
 ### 7. アクセス
