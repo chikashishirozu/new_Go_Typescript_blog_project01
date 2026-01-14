@@ -79,14 +79,13 @@ $ rm -rf admin/node_modules
 
 
 ```
-go.mod　と　go.sum　（backend/　に必要）　の生成コマンドを雑学や業界はなしを交えながら解説してください。
+go.mod　と　go.sum　（backend/　に必要）　の生成コマンド
 
-了解です。
 Goを触り始めた人が必ず一度は混乱する
 👉 go.mod と go.sum は何者か？どうやって生成されるのか？
 を、雑学＋業界の空気感込みで解説します。
 
-- まず結論（忙しい人向け）
+- 結論（忙しい人向け）
 go mod init example.com/myapp
 go mod tidy
 
