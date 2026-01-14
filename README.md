@@ -90,6 +90,7 @@ $ make migrate-create
 $ go run cmd/migrate/main.go seed
 $ docker compose exec backend sh
 /app # ls -la /app/tmp
+/app # go mod tidy
 /app # go build -o ./tmp/main .
 
 ```
