@@ -25,6 +25,59 @@ mkdir -p backend frontend admin
 - 
 - `backend/*` → backend/
 
+
+# 使用コマンド週
+
+```
+$ git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.14.0
+$ echo '. "$HOME/.asdf/asdf.sh"' >> ~/.bashrc
+$ echo '. "$HOME/.asdf/completions/asdf.bash"' >> ~/.bashrc
+$ source ~/.bashrc
+$ asdf plugin add golang
+$ asdf list golang
+$ asdf install golang 1.22.1
+$ asdf global golang 1.22.1
+$ which go
+$ which -a go
+$ go env GOROOT
+$ sudo dnf repoquery --whatrequires golang
+$ sudo dnf remove golang
+$ go env GOROOT
+$ which go
+$ go version
+$ docker compose up --build
+$ docker ps
+$ sudo touch /etc/containers/nodocker
+$ openssl rand -base64 32
+$ go test -run TestRand -v
+$ mkdir -p database models utils
+$ tree -R
+$ docker compose up --build
+$ go run cmd/migrate/main.go -action up
+$ docker compose down -v
+$ docker exec -it blogapp_postgres psql -U bloguser -d blogapp
+$ go get gorm.io/driver/postgres
+$ sudo chown $USER:$USER .air.toml
+$ chmod 644 .air.toml
+$ sudo chown -R $USER:$USER frontend admin
+$ sudo chown -R hiroppy123:hiroppy123 .
+$ chmod -R u+rwX .
+$ docker builder prune -f
+$ docker image prune -f
+$ docker volume prune -f\
+$ docker network prune -f
+$ sudo chown -R $USER:$USER frontend/ admin/
+$ sudo chown -R $USER:$USER .
+$ docker compose build --no-cache
+$ docker compose up -d
+$ docker compose up
+$ docker compose logs -f
+$ rm -rf frontend/node_modules frontend/.next
+$ rm -rf admin/node_modules
+```
+
+
+
 ```
 go.mod　と　go.sum　（backend/　に必要）　の生成コマンドを雑学や業界はなしを交えながら解説してください。
 
