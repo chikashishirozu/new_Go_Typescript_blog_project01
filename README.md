@@ -339,6 +339,27 @@ docker exec -it blogapp_postgres psql -U bloguser -d blogapp -c \
 
 $ docker exec -it blogapp_postgres psql -U bloguser -d blogapp
 
+-- 権限を確認
+SELECT grantee, privilege_type, table_schema, table_name 
+FROM information_schema.role_table_grants 
+WHERE grantee = 'bloguser';
+
+-- 権限を付与
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO bloguser;
+GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO bloguser;
+GRANT ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA public TO bloguser;
+
+
+# 1. データベーステーブル確認
+docker exec blogapp_postgres psql -U bloguser -d blogapp -c "SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' ORDER BY table_name;"
+
+# 2. テストサーバーでAPI確認
+docker compose exec backend sh -c "go run cmd/testserver/main.go &" && sleep 2
+curl http://localhost:8080/api/auth/register
+
+# 3. 実際のサーバーを起動
+docker compose up backend
+
 ```
 
 ### 7. アクセス
