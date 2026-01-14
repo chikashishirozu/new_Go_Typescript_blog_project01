@@ -92,7 +92,10 @@ $ docker compose exec backend sh
 /app # ls -la /app/tmp
 /app # go mod tidy
 /app # go build -o ./tmp/main .
-
+/app # go run cmd/migrate/main.go up
+/app # go run cmd/migrate/main.go down
+/app # go run cmd/migrate/main.go create
+/app # go run cmd/migrate/main.go seed
 ```
 
 
