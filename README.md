@@ -45,6 +45,9 @@ $ sudo dnf remove golang
 $ go env GOROOT
 $ which go
 $ go version
+$ docker compose down -v
+🧹 4. 全部まとめて一気に（最強）綺麗に掃除
+$ docker system prune -a --volumes -f
 $ docker compose up --build
 $ docker ps
 $ sudo touch /etc/containers/nodocker
