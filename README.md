@@ -48,7 +48,9 @@ $ go version
 $ docker compose down -v
 🧹 4. 全部まとめて一気に（最強）綺麗に掃除
 $ docker system prune -a --volumes -f
+$ podman rm -a -f
 $ podman system prune -a --volumes -f
+# 開始
 $ docker compose up --build
 $ docker ps
 $ sudo touch /etc/containers/nodocker
