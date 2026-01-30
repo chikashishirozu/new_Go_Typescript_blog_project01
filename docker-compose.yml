@@ -14,7 +14,7 @@ services:
       test: ["CMD-SHELL", "pg_isready -U bloguser -d blogapp"]
       interval: 10s
       timeout: 5s
-      retries: 5
+      retries: 10
       start_period: 30s      
 
   backend:
@@ -22,9 +22,13 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     container_name: blogapp_backend
+    
+    env_file:
+      - ./backend/.env    
+    
     environment:
       DATABASE_URL: "host=postgres user=bloguser password=blogpass dbname=blogapp port=5432 sslmode=disable"
-      JWT_SECRET: ${JWT_SECRET}
+#      JWT_SECRET: ${JWT_SECRET}
       PORT: 8080
       AUTO_MIGRATE: "true"
       SEED_DATA: "true"
@@ -44,8 +48,8 @@ services:
       context: ./frontend
       dockerfile: Dockerfile.dev
     container_name: blogapp_frontend
-    user: "${USER_ID:-1000}:${GROUP_ID:-1000}"
-#    user: "0:0"  # ← これが必要    
+#    user: "${USER_ID:-1000}:${GROUP_ID:-1000}"
+    user: "0:0"  # ← これが必要    
     environment:
       NEXT_PUBLIC_API_URL: http://backend:8080
     ports:
@@ -62,8 +66,8 @@ services:
       context: ./admin
       dockerfile: Dockerfile.dev
     container_name: blogapp_admin
-    user: "${USER_ID:-1000}:${GROUP_ID:-1000}"
-#    user: "0:0"  # ← これが必要    
+#    user: "${USER_ID:-1000}:${GROUP_ID:-1000}"
+    user: "0:0"  # ← これが必要    
     environment:
       VITE_API_URL: http://backend:8080
     ports:

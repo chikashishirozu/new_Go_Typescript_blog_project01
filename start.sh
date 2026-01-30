@@ -9,4 +9,4 @@ echo "Starting with USER_ID=$USER_ID and GROUP_ID=$GROUP_ID"
 # Docker Composeを起動
 docker compose down -v
 docker compose build --no-cache
-USER_ID=$USER_ID GROUP_ID=$GROUP_ID docker compose up -d
+USER_ID=0 GROUP_ID=0 docker compose up -d
