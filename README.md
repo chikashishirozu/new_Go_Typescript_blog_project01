@@ -293,6 +293,8 @@ JWT_SECRET=your-super-secret-jwt-key-change-in-production
 PORT=8080
 EOF
 
+echo "JWT_SECRET=$(openssl rand -base64 32)" >> backend/.env
+
 # フロントエンド
 cd ../frontend
 cat > .env.local << EOF
