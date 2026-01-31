@@ -10,9 +10,9 @@ import (
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 
-	"github.com/chikashishirozu/new_Go_Typescript_blog_project01/backend/handlers"
-	"github.com/chikashishirozu/new_Go_Typescript_blog_project01/backend/middleware"
-	"github.com/chikashishirozu/new_Go_Typescript_blog_project01/backend/models"
+	"blogapp/handlers"
+	"blogapp/middleware"
+	"blogapp/models"
 )
 
 func main() {
