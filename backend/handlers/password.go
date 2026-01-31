@@ -10,7 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
-	"github.com/chikashishirozu/new_Go_Typescript_blog_project01/backend/models"
+	"blogapp/models"
 )
 
 type PasswordHandler struct {
