@@ -56,7 +56,7 @@ echo "  GID: $LOCAL_GROUP_ID"
 echo ""
 
 echo -e "${GREEN}[2/9] Adminパスワード生成${NC}"
-ADMIN_PASSWORD=$(go run ./cmd/genpass) || {
+ADMIN_PASSWORD=$(cd backend && go run ./cmd/genpass) || {
   echo -e "${RED}Adminパスワード生成失敗${NC}"
   exit 1
 }
