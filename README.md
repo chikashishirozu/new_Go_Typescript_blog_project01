@@ -46,11 +46,18 @@ $ go env GOROOT
 $ which go
 $ go version
 $ docker compose down -v
+
 🧹 4. 全部まとめて一気に（最強）綺麗に掃除
 $ docker system prune -a --volumes -f
 $ podman rm -a -f
 $ podman system prune -a --volumes -f
+
 # 開始
+$ chmod +x setup-script.sh
+$ ./setup-script.sh
+$ chmod +x startup.sh
+$ ./start.sh
+
 $ docker compose up --build
 $ docker ps
 $ sudo touch /etc/containers/nodocker
