@@ -1,5 +1,5 @@
 # Go 1.22（asdf と揃えているのはとても良い）
-FROM golang:1.22-alpine
+FROM golang:1.24-alpine
 
 # 必要最低限のツール
 RUN apk add --no-cache git
@@ -21,3 +21,4 @@ COPY . .
 EXPOSE 8080
 
 # docker-compose 側で command を指定しているので CMD は不要
+

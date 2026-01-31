@@ -1,0 +1,6 @@
+func TestRand(t *testing.T) {
+	b := make([]byte, 32)
+	rand.Read(b)
+	fmt.Println(base64.StdEncoding.EncodeToString(b))
+}
+
