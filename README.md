@@ -55,7 +55,7 @@ $ podman system prune -a --volumes -f
 # 開始
 $ chmod +x setup-script.sh
 $ ./setup-script.sh
-$ chmod +x startup.sh
+$ chmod +x start.sh
 $ ./start.sh
 
 $ docker compose up --build
