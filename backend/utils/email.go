@@ -235,7 +235,7 @@ FROM_NAME=ブログアプリ
 
 3. handlers/password.go での使用:
 
-import "github.com/chikashishirozu/new_Go_Typescript_blog_project01/backend/utils"
+import "blogapp/utils"
 
 // ForgotPassword内で
 err := utils.SendPasswordResetEmail(user.Email, user.Username, resetURL)
