@@ -21,8 +21,8 @@ type Config struct {
 func Load() *Config {
 	dbHost := getEnv("DB_HOST", "localhost")
 	dbPort := getEnv("DB_PORT", "5432")
-	dbUser := getEnv("DB_USER", "postgres")
-	dbPassword := getEnv("DB_PASSWORD", "postgres")
+	dbUser := getEnv("DB_USER", "bloguser")
+	dbPassword := getEnv("DB_PASSWORD", "blogpass")
 	dbName := getEnv("DB_NAME", "blogapp")
 	
 	// DatabaseURL を構築
