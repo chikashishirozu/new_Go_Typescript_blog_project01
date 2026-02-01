@@ -101,6 +101,7 @@ $ make migrate-up
 $ make migrate-down
 $ make migrate-create
 $ go run cmd/migrate/main.go seed
+
 $ docker compose exec backend sh
 /app # ls -la /app/tmp
 /app # go mod tidy
@@ -109,9 +110,21 @@ $ docker compose exec backend sh
 /app # go run cmd/migrate/main.go down
 /app # go run cmd/migrate/main.go create
 /app # go run cmd/migrate/main.go seed
-```
 
+# 1. Firewalld の状態確認
+sudo firewall-cmd --state
 
+# 2. ポートを開放（必要な場合）
+sudo firewall-cmd --permanent --add-port=3006/tcp
+sudo firewall-cmd --permanent --add-port=3007/tcp
+sudo firewall-cmd --reload
+
+# 3. SELinux の状態確認
+getenforce
+
+# 4. SELinux が Enforcing の場合、Podman/Docker には通常問題なし
+# ただし、問題がある場合は一時的に Permissive に
+# sudo setenforce 0  # 一時的
 
 ```
 go.mod　と　go.sum　（backend/　に必要）　の生成コマンド
@@ -121,9 +134,10 @@ Goを触り始めた人が必ず一度は混乱する
 を、雑学＋業界の空気感込みで解説します。
 
 - 結論（忙しい人向け）
+```  
 go mod init example.com/myapp
 go mod tidy
-
+```
 
 go.mod → 依存関係の設計図（宣言）
 
@@ -135,8 +149,9 @@ go.sum = 納品チェックリスト
 
 ① go.mod とは何か？
 生成コマンド
+```
 go mod init github.com/username/project
-
+```
 これで起きること
 
 go.mod が作られる
@@ -175,12 +190,12 @@ Goが企業採用された最大理由の一つがこれ
 生成タイミング
 
 以下のどれかで自動生成されます：
-
+```
 go mod tidy
 go build
 go test
 go get
-
+```
 正体
 github.com/gin-gonic/gin v1.9.1 h1:xxxxxxxx
 github.com/gin-gonic/gin v1.9.1/go.mod h1:yyyyyyyy
@@ -202,8 +217,9 @@ Supply Chain Attack 対策
 npm/yarnが後追いで真似したレベル
 
 ③ go mod tidy：最重要コマンド
+```
 go mod tidy
-
+```
 やっていること
 
 使ってない依存 → 削除
@@ -244,12 +260,13 @@ Goツールが管理
 人間は信用されていない
 
 ⑤ 実務フロー（現場のリアル）
+```
 git clone ...
 go mod tidy
 go test ./...
 go build
 
-
+```
 これで 誰の環境でも同じ結果
 
 Docker不要でも再現可能
@@ -282,7 +299,7 @@ go.sum → 証拠保全
 Goは「人を信用しない設計」
 → だからチーム開発・CI・Kubernetesと相性がいい
 -
-```
+
 ```
 - `frontend/*` → frontend/
 - 
@@ -301,14 +318,16 @@ PORT=8080
 EOF
 
 echo "JWT_SECRET=$(openssl rand -base64 32)" >> backend/.env
-
+```
 # フロントエンド
+```
 cd ../frontend
 cat > .env.local << EOF
 NEXT_PUBLIC_API_URL=http://localhost:8080
 EOF
-
+```
 # 管理画面
+```
 cd ../admin
 cat > .env << EOF
 VITE_API_URL=http://localhost:8080
@@ -364,15 +383,18 @@ GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO bloguser;
 GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO bloguser;
 GRANT ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA public TO bloguser;
 
-
+```
 # 1. データベーステーブル確認
+```
 docker exec blogapp_postgres psql -U bloguser -d blogapp -c "SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' ORDER BY table_name;"
-
+```
 # 2. テストサーバーでAPI確認
+```
 docker compose exec backend sh -c "go run cmd/testserver/main.go &" && sleep 2
 curl http://localhost:8080/api/auth/register
-
+```
 # 3. 実際のサーバーを起動
+```
 docker compose up backend
 
 ```
