@@ -2,7 +2,7 @@ services:
   postgres:
     image: postgres:16-alpine
     container_name: blogapp_postgres
-    environment:
+    environment:  
       POSTGRES_DB: blogapp
       POSTGRES_USER: bloguser
       POSTGRES_PASSWORD: blogpass
@@ -27,12 +27,20 @@ services:
       - ./backend/.env    
     
     environment:
-      DATABASE_URL: "host=postgres user=bloguser password=blogpass dbname=blogapp port=5432 sslmode=disable"
+      # データベース接続情報を環境変数として設定
+      DB_HOST: postgres
+      DB_PORT: "5432"
+      DB_USER: bloguser
+      DB_PASSWORD: blogpass
+      DB_NAME: blogapp
+      # 既存の DATABASE_URL も以下のように修正
+      DATABASE_URL: "host=postgres user=bloguser password=blogpass dbname=blogapp port=5432 sslmode=disable"   
 #      JWT_SECRET: ${JWT_SECRET}
       PORT: 8080
       AUTO_MIGRATE: "true"
       SEED_DATA: "true"
-      ALLOWED_ORIGINS: "http://localhost:3000,http://localhost:3001"
+      GENERATE_ADMIN_PASSWORD: "false"
+      ALLOWED_ORIGINS: "http://localhost:3006,http://localhost:3007"
     ports:
       - "8080:8080"
     depends_on:
@@ -53,7 +61,7 @@ services:
     environment:
       NEXT_PUBLIC_API_URL: http://backend:8080
     ports:
-      - "3006:3000"
+      - "3006:3001"
     depends_on:
       - backend
     volumes:
@@ -71,15 +79,30 @@ services:
     environment:
       VITE_API_URL: http://backend:8080
     ports:
-      - "3007:3001"
+      - "3007:5173"
     depends_on:
       - backend
     volumes:
       - ./admin:/app:z
       - admin-node-modules:/app/node_modules
+      
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: blogapp_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
 
 volumes:
   postgres_data:
+  pgadmin_data: 
   backend-tmp:
   frontend-node-modules:
   frontend-next:
