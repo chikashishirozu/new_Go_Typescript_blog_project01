@@ -69,3 +69,4 @@ func AutoMigrate(db *gorm.DB) error {
 	log.Println("Migrations completed successfully")
 	return nil
 }
+
