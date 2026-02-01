@@ -26,6 +26,11 @@ type User struct {
 	// 権限
 	IsAdmin    bool `gorm:"default:false" json:"is_admin"`
 	IsVerified bool `gorm:"default:false" json:"is_verified"`
+	
+	// パスワードリセット用
+	ResetPasswordToken   string    `gorm:"index" json:"-"`
+	ResetPasswordExpires time.Time `json:"-"`
+	PasswordChangedAt    time.Time `json:"password_changed_at"`	
 
 	// リレーション
 	Posts []Post `gorm:"foreignKey:AuthorID" json:"-"`
@@ -42,6 +47,7 @@ func (u *User) BeforeCreate(tx *gorm.DB) error {
 			return err
 		}
 		u.Password = string(hashedPassword)
+		u.PasswordChangedAt = time.Now()
 	}
 	return nil
 }
