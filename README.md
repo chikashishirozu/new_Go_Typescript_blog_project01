@@ -111,6 +111,17 @@ $ docker compose exec backend sh
 /app # go run cmd/migrate/main.go create
 /app # go run cmd/migrate/main.go seed
 
+$ docker logs blogapp_admin
+$ docker logs blogapp_frontend
+$ docker logs blogapp_backend
+$ docker logs blogapp_postgres
+$ docker logs blogapp_pgadmin
+$ docker ps
+$ docker exec blogapp_frontend netstat -tlnp
+$ docker exec blogapp_backend netstat -tlnp
+$ curl -I http://localhost:3006
+$ curl http://localhost:8080/api/categories
+
 # 1. Firewalld の状態確認
 sudo firewall-cmd --state
 
