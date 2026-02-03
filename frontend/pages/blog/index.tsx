@@ -18,14 +18,32 @@ export default function BlogList() {
 
   useEffect(() => {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
+    console.log('BlogList API URL:', apiUrl);
     
     fetch(`${apiUrl}/api/posts`)
       .then(res => {
-        if (!res.ok) throw new Error('Failed to fetch posts');
+        if (!res.ok) throw new Error(`Failed to fetch posts: ${res.status}`);
         return res.json();
       })
       .then(data => {
-        setPosts(data || []);
+        console.log('Raw API response:', data);
+        
+        // ✅ データ構造の確認と修正
+        let postsArray: Post[] = [];
+        
+        if (Array.isArray(data)) {
+          // ケース1: dataが配列の場合
+          postsArray = data;
+        } else if (data && Array.isArray(data.posts)) {
+          // ケース2: data.postsが配列の場合
+          postsArray = data.posts;
+        } else if (data && data.posts && typeof data.posts === 'object') {
+          // ケース3: data.postsがオブジェクトの場合（キーがID）
+          postsArray = Object.values(data.posts);
+        }
+        
+        console.log('Processed posts:', postsArray);
+        setPosts(postsArray);
         setLoading(false);
       })
       .catch(err => {
@@ -61,7 +79,7 @@ export default function BlogList() {
         </div>
         <h1 className="text-4xl font-bold mb-8">Blog Posts</h1>
         
-        {posts.length === 0 ? (
+        {!Array.isArray(posts) || posts.length === 0 ? (
           <p className="text-gray-600">No posts found.</p>
         ) : (
           <div className="grid gap-6">
@@ -74,9 +92,9 @@ export default function BlogList() {
                 </Link>
                 <p className="text-gray-600 mb-4">{post.excerpt || 'No excerpt available.'}</p>
                 <div className="flex items-center text-sm text-gray-500 space-x-4">
-                  <span>By {post.author_name}</span>
+                  <span>By {post.author_name || 'Unknown'}</span>
                   <span>•</span>
-                  <span>{post.category_name}</span>
+                  <span>{post.category_name || 'Uncategorized'}</span>
                   <span>•</span>
                   <span>{new Date(post.published_at).toLocaleDateString('ja-JP')}</span>
                 </div>
