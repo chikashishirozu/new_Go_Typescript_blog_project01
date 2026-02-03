@@ -183,7 +183,7 @@ export default function FeaturedPosts({ limit = 3 }: FeaturedPostsProps) {
                         clipRule="evenodd"
                       />
                     </svg>
-                    {post.author.username}
+                    {post.author_name || post.author?.username || 'Unknown Author'}
                   </span>
                   <time dateTime={post.created_at}>
                     {formatDate(post.created_at)}
