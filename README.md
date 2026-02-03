@@ -53,8 +53,13 @@ $ podman rm -a -f
 $ podman system prune -a --volumes -f
 
 # 開始
+
 $ chmod +x setup-script.sh
 $ ./setup-script.sh
+
+$ chmod +x setup-script-improved.sh
+$ ./setup-script-improved.sh
+
 $ chmod +x start.sh
 $ ./start.sh
 
