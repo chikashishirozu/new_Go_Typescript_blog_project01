@@ -26,13 +26,21 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [mounted, setMounted] = useState(false); // ✅ mounted状態を追加
   const router = useRouter();
 
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
 
   // 初回ロード時にトークンから復元
   useEffect(() => {
+    setMounted(true);
+    
     const initAuth = async () => {
+      const savedUser = localStorage.getItem('user');
+      if (savedUser) {
+        setUser(JSON.parse(savedUser));
+      }
+      
       const token = Cookies.get('token');
       if (token) {
         try {
@@ -43,13 +51,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         } catch (error) {
           // トークンが無効な場合は削除
           Cookies.remove('token');
+          localStorage.removeItem('user');
         }
       }
       setLoading(false);
     };
 
     initAuth();
-  }, [apiUrl]);
+  }, [apiUrl]); // ✅ apiUrlを依存配列に追加
 
   // ログイン
   const login = async (email: string, password: string) => {
@@ -65,6 +74,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       Cookies.set('token', token, { expires: 7 });
 
       setUser(userData);
+      localStorage.setItem('user', JSON.stringify(userData));
 
       // ダッシュボードにリダイレクト
       router.push('/dashboard');
@@ -89,6 +99,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       Cookies.set('token', token, { expires: 7 });
 
       setUser(userData);
+      localStorage.setItem('user', JSON.stringify(userData));
 
       // ウェルカムページにリダイレクト
       router.push('/welcome');
@@ -102,6 +113,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const logout = () => {
     Cookies.remove('token');
     setUser(null);
+    localStorage.removeItem('user');
     router.push('/');
   };
 
@@ -113,6 +125,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     logout,
     isAuthenticated: !!user,
   };
+  
+  // ✅ マウント前はnullを返す
+  if (!mounted) {
+    return null;
+  }  
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
@@ -145,6 +162,7 @@ export const setupAxiosInterceptors = () => {
       // 401エラー（認証切れ）の場合はログアウト
       if (error.response?.status === 401) {
         Cookies.remove('token');
+        localStorage.removeItem('user');
         window.location.href = '/login';
       }
       return Promise.reject(error);
