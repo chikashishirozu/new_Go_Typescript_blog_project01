@@ -19,7 +19,12 @@ export default function CategoriesPage() {
     fetch(`${apiUrl}/api/categories`)
       .then(res => res.json())
       .then(data => {
-        setCategories(data || []);
+        console.log('Categories data:', data); // デバッグ用
+        // ✅ APIレスポンスが配列かオブジェクトか確認
+        const categoriesArray = Array.isArray(data) ? data : 
+                               data.categories ? data.categories : 
+                               [];
+        setCategories(categoriesArray);
         setLoading(false);
       })
       .catch(err => {
