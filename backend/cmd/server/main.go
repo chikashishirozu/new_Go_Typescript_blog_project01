@@ -8,6 +8,7 @@ import (
 	"blogapp/routes"
 	"log"
 	"os"
+	"strings"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -46,23 +47,32 @@ func main() {
 	// Ginのセットアップ
 	router := gin.Default()
 
+	// CORS設定を環境変数から読み取る
+	allowedOrigins := []string{"http://localhost:3006", "http://localhost:3007"}
+	if envOrigins := os.Getenv("ALLOWED_ORIGINS"); envOrigins != "" {
+		allowedOrigins = strings.Split(envOrigins, ",")
+	}
+
+	log.Printf("CORS allowed origins: %v", allowedOrigins)
+
 	// CORS設定
 	router.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:3006", "http://localhost:3007"},
-		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
+		AllowOrigins:     allowedOrigins,
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization", "Accept"},
 		ExposeHeaders:    []string{"Content-Length"},
 		AllowCredentials: true,
+		MaxAge:           12 * 3600, // 12時間
 	}))
 
 	// Setup routes
 	routes.SetupRoutes(router)
 
 	// Start server
-	addr := ":" + cfg.Port
+	addr := "0.0.0.0:" + cfg.Port
 	log.Printf("Server starting on %s", addr)
+	log.Printf("Server will listen on all interfaces")
 	if err := router.Run(addr); err != nil {
 		log.Fatalf("Failed to start server: %v", err)
 	}
 }
-
