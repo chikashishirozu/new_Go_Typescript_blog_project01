@@ -46,11 +46,14 @@ $ go env GOROOT
 $ which go
 $ go version
 $ docker compose down -v
+# 2. イメージもクリーンアップ（オプション）
+$ docker-compose down --rmi all -v
 
 🧹 4. 全部まとめて一気に（最強）綺麗に掃除
 $ docker system prune -a --volumes -f
 $ podman rm -a -f
 $ podman system prune -a --volumes -f
+
 
 # 開始
 
