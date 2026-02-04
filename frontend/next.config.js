@@ -2,20 +2,13 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
-  webpack: (config, { dev, isServer }) => {
-    // Fedora/Dockerでのホットリロード対策
-    if (dev && !isServer) {
-      config.watchOptions = {
-        poll: 1000, // 1秒ごとにポーリング
-        aggregateTimeout: 300,
-      };
-    }
-    return config;
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production',
+  },  
+  images: {
+    domains: [], // 必要に応じて外部ドメインを追加
   },
-  // ファイル監視の設定
-  experimental: {
-    externalDir: true,
-  },
+  // rewritesは削除（直接APIを呼び出すため）
 };
 
 module.exports = nextConfig;
