@@ -114,12 +114,13 @@ chmod 600 .env
 
 # backend/.envファイル作成
 echo -e "${GREEN}[6/9] backend/.env ファイル作成${NC}"
+# 既存の backend/.env 作成部分を修正
 cat > backend/.env << EOF
 DATABASE_URL=host=postgres user=bloguser password=$POSTGRES_PASSWORD dbname=blogapp port=5432 sslmode=disable
 JWT_SECRET=$JWT_SECRET
 PORT=8080
 GIN_MODE=debug
-ALLOWED_ORIGINS=http://localhost:3000,http://localhost:3001
+ALLOWED_ORIGINS=http://localhost:3006,http://localhost:3007
 LOG_LEVEL=debug
 EOF
 echo "  ✓ backend/.env ファイル作成完了"
@@ -133,7 +134,7 @@ echo -e "${GREEN}[7/9] frontend/.env.local ファイル作成${NC}"
 cat > frontend/.env.local << EOF
 NEXT_PUBLIC_API_URL=http://localhost:8080
 NEXT_PUBLIC_SITE_NAME=ブログアプリ
-NEXT_PUBLIC_SITE_URL=http://localhost:3000
+NEXT_PUBLIC_SITE_URL=http://localhost:3006
 EOF
 echo "  ✓ frontend/.env.local ファイル作成完了"
 echo ""
@@ -185,8 +186,8 @@ echo "==========================================${NC}"
 echo ""
 echo "次のステップ:"
 echo "  1. docker-compose up --build"
-echo "  2. http://localhost:3000 でフロントエンドにアクセス"
-echo "  3. http://localhost:3001 で管理画面にアクセス"
+echo "  2. http://localhost:3006 でフロントエンドにアクセス"
+echo "  3. http://localhost:3007 で管理画面にアクセス"
 echo ""
 echo "管理者ユーザー作成:"
 echo "  curl -X POST http://localhost:8080/api/auth/register \\"
