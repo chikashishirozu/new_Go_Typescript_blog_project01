@@ -35,11 +35,11 @@ services:
       DB_NAME: blogapp
       # 既存の DATABASE_URL も以下のように修正
       DATABASE_URL: "host=postgres user=bloguser password=blogpass dbname=blogapp port=5432 sslmode=disable"   
-#      JWT_SECRET: ${JWT_SECRET}
       PORT: 8080
       AUTO_MIGRATE: "true"
       SEED_DATA: "true"
       GENERATE_ADMIN_PASSWORD: "false"
+      # ⚠️ 重要: ブラウザからのアクセスを許可
       ALLOWED_ORIGINS: "http://localhost:3006,http://localhost:3007"
     ports:
       - "8080:8080"
@@ -56,10 +56,12 @@ services:
       context: ./frontend
       dockerfile: Dockerfile.dev
     container_name: blogapp_frontend
-#    user: "${USER_ID:-1000}:${GROUP_ID:-1000}"
-    user: "0:0"  # ← これが必要    
+    user: "0:0"
     environment:
-      NEXT_PUBLIC_API_URL: http://backend:8080
+      # ⚠️ 重要: ブラウザからアクセスするのでlocalhostを使用
+      NEXT_PUBLIC_API_URL: http://localhost:8080
+      NEXT_PUBLIC_SITE_NAME: ブログアプリ
+      NEXT_PUBLIC_SITE_URL: http://localhost:3006      
     ports:
       - "3006:3001"
     depends_on:
@@ -74,10 +76,10 @@ services:
       context: ./admin
       dockerfile: Dockerfile.dev
     container_name: blogapp_admin
-#    user: "${USER_ID:-1000}:${GROUP_ID:-1000}"
-    user: "0:0"  # ← これが必要    
+    user: "0:0"
     environment:
-      VITE_API_URL: http://backend:8080
+      # ⚠️ 重要: ブラウザからアクセスするのでlocalhostを使用
+      VITE_API_URL: http://localhost:8080
     ports:
       - "3007:5173"
     depends_on:
@@ -90,8 +92,8 @@ services:
     image: dpage/pgadmin4:latest
     container_name: blogapp_pgadmin
     environment:
-      PGADMIN_DEFAULT_EMAIL: admin@example.com
-      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-admin@example.com}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
     ports:
       - "5050:80"
     depends_on:
